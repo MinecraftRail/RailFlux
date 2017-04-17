@@ -3,4 +3,4 @@ version: ${project.version}
 depend: [Rail]
 description: Simple energy system for Rail
 website: http://phanta.xyz
-main: io.github.phantamanta44.mcrail.railtech.RFMain
+main: io.github.phantamanta44.mcrail.railflux.RFMain

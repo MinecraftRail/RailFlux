@@ -1,4 +1,4 @@
-package io.github.phantamanta44.mcrail.railtech;
+package io.github.phantamanta44.mcrail.railflux;
 
 public interface IEnergyContainer {
 

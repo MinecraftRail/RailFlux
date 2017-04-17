@@ -1,4 +1,4 @@
-package io.github.phantamanta44.mcrail.railtech;
+package io.github.phantamanta44.mcrail.railflux;
 
 import io.github.phantamanta44.mcrail.Rail;
 import io.github.phantamanta44.mcrail.sign.SignEntity;
