@@ -3,7 +3,10 @@ package io.github.phantamanta44.mcrail.railflux;
 import io.github.phantamanta44.mcrail.Rail;
 import io.github.phantamanta44.mcrail.sign.SignEntity;
 import io.github.phantamanta44.mcrail.util.SignUtils;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.function.Function;
 
 public class RFMain extends JavaPlugin {
 
@@ -21,27 +24,15 @@ public class RFMain extends JavaPlugin {
             SignEntity se = SignUtils.getAt(block);
             return (se != null && se instanceof IEnergyProvider) ? (IEnergyProvider)se : null;
         });
-        Rail.itemAdapters().register(IEnergyContainer.class, stack -> {
-            try {
-                return new EnergyItem(stack);
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
-        });
-        Rail.itemAdapters().register(IEnergyConsumer.class, stack -> {
-            try {
-                return new EnergyItem(stack);
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
-        });
-        Rail.itemAdapters().register(IEnergyProvider.class, stack -> {
-            try {
-                return new EnergyItem(stack);
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
-        });
+        Rail.itemAdapters().register(EnergyItem.class, itemMapper());
+        Rail.itemAdapters().register(IEnergyContainer.class, itemMapper());
+        Rail.itemAdapters().register(IEnergyConsumer.class, itemMapper());
+        Rail.itemAdapters().register(IEnergyProvider.class, itemMapper());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Function<ItemStack, T> itemMapper() {
+        return stack -> (T)EnergyItem.wrap(stack);
     }
 
 }

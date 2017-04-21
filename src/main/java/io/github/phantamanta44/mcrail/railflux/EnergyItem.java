@@ -4,6 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,10 +21,13 @@ public class EnergyItem implements IEnergyContainer, IEnergyProvider, IEnergyCon
 
     protected final ItemStack stack;
 
+    public static EnergyItem wrap(ItemStack stack) {
+        EnergyItem item = new EnergyItem(stack);
+        return item.matcher() == null ? null : item;
+    }
+
     public EnergyItem(ItemStack stack) {
         this.stack = stack;
-        if (matcher() == null)
-            throw new IllegalArgumentException("Not an energy item!");
     }
 
     protected Matcher matcher() {
@@ -30,14 +36,17 @@ public class EnergyItem implements IEnergyContainer, IEnergyProvider, IEnergyCon
     }
 
     protected String getLastLore() {
+        if (!stack.getItemMeta().hasLore())
+            return "";
         List<String> lore = stack.getItemMeta().getLore();
         return lore.get(lore.size() - 1);
     }
 
     protected void update(int charge, int maxCharge) {
         ItemMeta meta = stack.getItemMeta();
-        List<String> lore = meta.getLore();
+        List<String> lore = new ArrayList<>(meta.getLore());
         lore.set(lore.size() - 1, format(charge, maxCharge));
+        meta.setLore(lore);
         stack.setItemMeta(meta);
     }
 
@@ -83,7 +92,14 @@ public class EnergyItem implements IEnergyContainer, IEnergyProvider, IEnergyCon
 
     public static void energize(ItemStack stack, int maxCharge, int charge) {
         ItemMeta meta = stack.getItemMeta();
-        meta.getLore().add(format(charge, maxCharge));
+        String str = format(charge, maxCharge);
+        if (meta.hasLore()) {
+            List<String> lore = new LinkedList<>(meta.getLore());
+            lore.add(str);
+            meta.setLore(lore);
+        } else {
+            meta.setLore(Collections.singletonList(str));
+        }
         stack.setItemMeta(meta);
     }
 
