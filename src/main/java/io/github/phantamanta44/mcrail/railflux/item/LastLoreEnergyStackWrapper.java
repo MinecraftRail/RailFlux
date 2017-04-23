@@ -1,5 +1,6 @@
-package io.github.phantamanta44.mcrail.railflux;
+package io.github.phantamanta44.mcrail.railflux.item;
 
+import io.github.phantamanta44.mcrail.railflux.IEnergized;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -11,22 +12,22 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EnergyItem implements IEnergyContainer, IEnergyProvider, IEnergyConsumer {
+public class LastLoreEnergyStackWrapper implements IEnergized {
 
-    public static final Pattern ENERGY_PATTERN = Pattern.compile(
-            Pattern.quote(ChatColor.GRAY.toString()) +
-                    "Energy: " +
-                    Pattern.quote(ChatColor.AQUA.toString()) +
-                    "(\\d+) / (\\d+) RJ");
+    public static final String ENERGY_PATTERN_STR = Pattern.quote(ChatColor.GRAY.toString()) +
+            "Energy: " +
+            Pattern.quote(ChatColor.AQUA.toString()) +
+            "(\\d+) / (\\d+) RJ";
+    public static final Pattern ENERGY_PATTERN = Pattern.compile(ENERGY_PATTERN_STR);
 
     protected final ItemStack stack;
 
-    public static EnergyItem wrap(ItemStack stack) {
-        EnergyItem item = new EnergyItem(stack);
+    public static LastLoreEnergyStackWrapper wrap(ItemStack stack) {
+        LastLoreEnergyStackWrapper item = new LastLoreEnergyStackWrapper(stack);
         return item.matcher() == null ? null : item;
     }
 
-    public EnergyItem(ItemStack stack) {
+    public LastLoreEnergyStackWrapper(ItemStack stack) {
         this.stack = stack;
     }
 
