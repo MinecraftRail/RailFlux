@@ -67,7 +67,7 @@ public class LastLoreEnergyStackWrapper implements IEnergized {
         int charge = Integer.parseInt(m.group(1));
         int max = Integer.parseInt(m.group(2));
         int toTransfer = Math.min(amount, max - charge);
-        update(charge + amount, max);
+        update(charge + toTransfer, max);
         return toTransfer;
     }
 
