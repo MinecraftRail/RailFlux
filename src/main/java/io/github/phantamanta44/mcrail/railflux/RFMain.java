@@ -2,34 +2,35 @@ package io.github.phantamanta44.mcrail.railflux;
 
 import io.github.phantamanta44.mcrail.Rail;
 import io.github.phantamanta44.mcrail.item.IItemBehaviour;
+import io.github.phantamanta44.mcrail.module.IRailModule;
 import io.github.phantamanta44.mcrail.railflux.item.IEnergyItemBehaviour;
 import io.github.phantamanta44.mcrail.railflux.item.LastLoreEnergyStackWrapper;
-import io.github.phantamanta44.mcrail.sign.SignEntity;
-import io.github.phantamanta44.mcrail.util.SignUtils;
+import io.github.phantamanta44.mcrail.tile.RailTile;
+import io.github.phantamanta44.mcrail.util.TileUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.function.Function;
 
-public class RFMain extends JavaPlugin {
+public class RFMain extends JavaPlugin implements IRailModule {
 
     @Override
-    public void onEnable() {
+    public void phaseSetup() {
         Rail.blockAdapters().register(IEnergyContainer.class, block -> {
-            SignEntity se = SignUtils.getAt(block);
-            return (se != null && se instanceof IEnergyContainer) ? (IEnergyContainer)se : null;
+            RailTile tile = TileUtils.getAt(block);
+            return (tile instanceof IEnergyContainer) ? (IEnergyContainer)tile : null;
         });
         Rail.blockAdapters().register(IEnergyConsumer.class, block -> {
-            SignEntity se = SignUtils.getAt(block);
-            return (se != null && se instanceof IEnergyConsumer) ? (IEnergyConsumer)se : null;
+            RailTile tile = TileUtils.getAt(block);
+            return (tile instanceof IEnergyConsumer) ? (IEnergyConsumer)tile : null;
         });
         Rail.blockAdapters().register(IEnergyProvider.class, block -> {
-            SignEntity se = SignUtils.getAt(block);
-            return (se != null && se instanceof IEnergyProvider) ? (IEnergyProvider)se : null;
+            RailTile tile = TileUtils.getAt(block);
+            return (tile instanceof IEnergyProvider) ? (IEnergyProvider)tile : null;
         });
         Rail.blockAdapters().register(IEnergized.class, block -> {
-            SignEntity se = SignUtils.getAt(block);
-            return (se != null && se instanceof IEnergized) ? (IEnergized)se : null;
+            RailTile tile = TileUtils.getAt(block);
+            return (tile instanceof IEnergized) ? (IEnergized)tile : null;
         });
         Rail.itemAdapters().register(IEnergyContainer.class, itemMapper(IEnergyContainer.class));
         Rail.itemAdapters().register(IEnergyConsumer.class, itemMapper(IEnergyConsumer.class));
@@ -41,7 +42,7 @@ public class RFMain extends JavaPlugin {
     private static <T> Function<ItemStack, T> itemMapper(Class<T> type) {
         return stack -> {
             IItemBehaviour item = Rail.itemRegistry().get(stack);
-            return (T)(item != null && item instanceof IEnergyItemBehaviour
+            return (T)(item instanceof IEnergyItemBehaviour
                     ? ((IEnergyItemBehaviour)item).wrap(stack)
                     : LastLoreEnergyStackWrapper.wrap(stack));
         };
