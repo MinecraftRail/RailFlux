@@ -4,6 +4,6 @@ public interface IEnergyConsumer {
 
     int offerEnergy(int amount);
 
-    boolean canAccept(int amount);
+    boolean canAcceptEnergy(int amount);
 
 }

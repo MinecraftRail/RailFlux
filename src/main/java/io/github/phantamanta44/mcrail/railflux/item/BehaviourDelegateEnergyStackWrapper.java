@@ -19,7 +19,7 @@ public class BehaviourDelegateEnergyStackWrapper implements IEnergized {
     }
 
     @Override
-    public boolean canAccept(int amount) {
+    public boolean canAcceptEnergy(int amount) {
         return item.canAccept(amount, stack);
     }
 
@@ -29,7 +29,7 @@ public class BehaviourDelegateEnergyStackWrapper implements IEnergized {
     }
 
     @Override
-    public boolean canProvide(int amount) {
+    public boolean canProvideEnergy(int amount) {
         return item.canProvide(amount, stack);
     }
 

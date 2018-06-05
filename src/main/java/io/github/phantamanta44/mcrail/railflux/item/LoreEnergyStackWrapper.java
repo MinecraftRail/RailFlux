@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LastLoreEnergyStackWrapper implements IEnergized {
+public class LoreEnergyStackWrapper implements IEnergized {
 
     public static final String ENERGY_PATTERN_STR = Pattern.quote(ChatColor.GRAY.toString()) +
             "Energy: " +
@@ -20,33 +20,36 @@ public class LastLoreEnergyStackWrapper implements IEnergized {
             "(\\d+) / (\\d+) RJ";
     public static final Pattern ENERGY_PATTERN = Pattern.compile(ENERGY_PATTERN_STR);
 
-    protected final ItemStack stack;
-
-    public static LastLoreEnergyStackWrapper wrap(ItemStack stack) {
-        LastLoreEnergyStackWrapper item = new LastLoreEnergyStackWrapper(stack);
+    public static LoreEnergyStackWrapper wrap(ItemStack stack, int index) {
+        LoreEnergyStackWrapper item = new LoreEnergyStackWrapper(stack, index);
         return item.matcher() == null ? null : item;
     }
 
-    public LastLoreEnergyStackWrapper(ItemStack stack) {
+    protected final ItemStack stack;
+
+    private final int index;
+
+    protected LoreEnergyStackWrapper(ItemStack stack, int index) {
         this.stack = stack;
+        this.index = index;
     }
 
     protected Matcher matcher() {
-        Matcher m = ENERGY_PATTERN.matcher(getLastLore());
+        Matcher m = ENERGY_PATTERN.matcher(getLoreLine());
         return m.matches() ? m : null;
     }
 
-    protected String getLastLore() {
+    protected String getLoreLine() {
         if (!stack.getItemMeta().hasLore())
             return "";
         List<String> lore = stack.getItemMeta().getLore();
-        return lore.get(lore.size() - 1);
+        return lore.size() <= index ? "" : lore.get(index);
     }
 
     protected void update(int charge, int maxCharge) {
         ItemMeta meta = stack.getItemMeta();
         List<String> lore = new ArrayList<>(meta.getLore());
-        lore.set(lore.size() - 1, format(charge, maxCharge));
+        lore.set(index, format(charge, maxCharge));
         meta.setLore(lore);
         stack.setItemMeta(meta);
     }
@@ -72,7 +75,7 @@ public class LastLoreEnergyStackWrapper implements IEnergized {
     }
 
     @Override
-    public boolean canAccept(int amount) {
+    public boolean canAcceptEnergy(int amount) {
         Matcher m = matcher();
         return Integer.parseInt(m.group(2)) - Integer.parseInt(m.group(1)) >= amount;
     }
@@ -87,7 +90,7 @@ public class LastLoreEnergyStackWrapper implements IEnergized {
     }
 
     @Override
-    public boolean canProvide(int amount) {
+    public boolean canProvideEnergy(int amount) {
         return Integer.parseInt(matcher().group(1)) >= amount;
     }
 

@@ -1,6 +1,6 @@
 package io.github.phantamanta44.mcrail.railflux.item;
 
-import io.github.phantamanta44.mcrail.item.characteristic.CharLastLore;
+import io.github.phantamanta44.mcrail.item.characteristic.CharLore;
 import io.github.phantamanta44.mcrail.item.characteristic.IItemCharacteristic;
 import io.github.phantamanta44.mcrail.railflux.IEnergized;
 import org.bukkit.inventory.ItemStack;
@@ -8,19 +8,22 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public abstract class ItemLastLoreEnergy implements IEnergyItemBehaviour {
+public abstract class ItemLoreEnergy implements IEnergyItemBehaviour {
 
     protected final Collection<IItemCharacteristic> characteristics;
 
-    public ItemLastLoreEnergy(int maxCharge, int charge) {
+    private final int loreLine;
+
+    public ItemLoreEnergy(int loreLine, int maxCharge, int charge) {
+        this.loreLine = loreLine;
         this.characteristics = new LinkedList<>();
-        this.characteristics.add(new CharLastLore(
-                LastLoreEnergyStackWrapper.format(charge, maxCharge),
-                LastLoreEnergyStackWrapper.ENERGY_PATTERN_STR));
+        this.characteristics.add(new CharLore(loreLine,
+                LoreEnergyStackWrapper.format(charge, maxCharge),
+                LoreEnergyStackWrapper.ENERGY_PATTERN_STR));
     }
 
-    public ItemLastLoreEnergy(int maxCharge) {
-        this(maxCharge, 0);
+    public ItemLoreEnergy(int loreLine, int maxCharge) {
+        this(loreLine, maxCharge, 0);
     }
 
     @Override
@@ -45,7 +48,7 @@ public abstract class ItemLastLoreEnergy implements IEnergyItemBehaviour {
 
     @Override
     public boolean canAccept(int amount, ItemStack stack) {
-        return wrap(stack).canAccept(amount);
+        return wrap(stack).canAcceptEnergy(amount);
     }
 
     @Override
@@ -55,12 +58,12 @@ public abstract class ItemLastLoreEnergy implements IEnergyItemBehaviour {
 
     @Override
     public boolean canProvide(int amount, ItemStack stack) {
-        return wrap(stack).canProvide(amount);
+        return wrap(stack).canProvideEnergy(amount);
     }
 
     @Override
     public IEnergized wrap(ItemStack stack) {
-        return LastLoreEnergyStackWrapper.wrap(stack);
+        return LoreEnergyStackWrapper.wrap(stack, loreLine);
     }
 
 }

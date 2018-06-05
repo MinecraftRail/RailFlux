@@ -4,7 +4,7 @@ import io.github.phantamanta44.mcrail.Rail;
 import io.github.phantamanta44.mcrail.item.IItemBehaviour;
 import io.github.phantamanta44.mcrail.module.IRailModule;
 import io.github.phantamanta44.mcrail.railflux.item.IEnergyItemBehaviour;
-import io.github.phantamanta44.mcrail.railflux.item.LastLoreEnergyStackWrapper;
+import io.github.phantamanta44.mcrail.railflux.item.LoreEnergyStackWrapper;
 import io.github.phantamanta44.mcrail.tile.RailTile;
 import io.github.phantamanta44.mcrail.util.TileUtils;
 import org.bukkit.inventory.ItemStack;
@@ -44,7 +44,7 @@ public class RFMain extends JavaPlugin implements IRailModule {
             IItemBehaviour item = Rail.itemRegistry().get(stack);
             return (T)(item instanceof IEnergyItemBehaviour
                     ? ((IEnergyItemBehaviour)item).wrap(stack)
-                    : LastLoreEnergyStackWrapper.wrap(stack));
+                    : LoreEnergyStackWrapper.wrap(stack, 0));
         };
     }
 
